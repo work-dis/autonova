@@ -1,2 +1,6 @@
 autonova-site*.tar.gz
 .DS_Store
+node_modules/
+.vercel/
+.netlify/
+.wrangler/
