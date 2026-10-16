@@ -1,0 +1,15 @@
+{
+  "name": "autonova",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "AUTONOVA — statyczny serwis rekomendacyjny robotów do domu i ogrodu.",
+  "scripts": {
+    "build": "node scripts/verify-site.mjs",
+    "dev": "node scripts/serve.mjs",
+    "start": "node scripts/serve.mjs"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

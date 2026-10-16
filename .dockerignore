@@ -1,0 +1,7 @@
+.git
+.github
+.openai
+.DS_Store
+node_modules
+README.md
+strategy.md
