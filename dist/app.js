@@ -1,12 +1,21 @@
 const header=document.querySelector('[data-header]');
 const reveals=[...document.querySelectorAll('.reveal')];
-const observer=new IntersectionObserver(entries=>entries.forEach(entry=>{if(entry.isIntersecting){entry.target.classList.add('in-view');observer.unobserve(entry.target)}}),{threshold:.12});
-reveals.forEach((el,i)=>{el.style.transitionDelay=`${Math.min(i%4,3)*70}ms`;observer.observe(el)});
-window.addEventListener('scroll',()=>header.classList.toggle('scrolled',scrollY>24),{passive:true});
+
+if('IntersectionObserver' in window&&!window.matchMedia('(prefers-reduced-motion: reduce)').matches){
+  const observer=new IntersectionObserver(entries=>entries.forEach(entry=>{if(entry.isIntersecting){entry.target.classList.add('in-view');observer.unobserve(entry.target)}}),{threshold:.12});
+  reveals.forEach((el,i)=>{el.style.transitionDelay=`${Math.min(i%4,3)*70}ms`;observer.observe(el)});
+}else{
+  reveals.forEach(el=>el.classList.add('in-view'));
+}
+
+const updateHeader=()=>header?.classList.toggle('scrolled',scrollY>24);
+updateHeader();
+window.addEventListener('scroll',updateHeader,{passive:true});
 
 document.querySelectorAll('.filter').forEach(button=>button.addEventListener('click',()=>{
-  document.querySelectorAll('.filter').forEach(item=>item.classList.remove('active'));
+  document.querySelectorAll('.filter').forEach(item=>{item.classList.remove('active');item.setAttribute('aria-pressed','false')});
   button.classList.add('active');
+  button.setAttribute('aria-pressed','true');
   const filter=button.dataset.filter;
   document.querySelectorAll('.product-card').forEach(card=>card.classList.toggle('hidden',filter!=='all'&&card.dataset.category!==filter));
 }));
@@ -18,13 +27,13 @@ const back=quiz.querySelector('[data-back]');
 const progress=document.querySelector('[data-progress]');
 const progressLabel=document.querySelector('[data-progress-label]');
 const answers={};let current=1;
-const productLinks={qv35a:'https://pl.roborock.com/collections/roboty-sprzatajace',saros:'https://pl.roborock.com/products/roborock-saros-10r-robot-sprzatajacy',z60:'https://pl.mova.tech/products/mova-z60-ultra-robot-vacuum',yuka:'https://pl.mammotion.com/',luba:'https://pl.mammotion.com/',spino:'https://pl.mammotion.com/products/robot-do-czyszczenia-basenu-spino-e1'};
+const productLinks={qv35a:'https://pl.roborock.com/products/roborock-qv35a-set-robot-sprzatajacy',saros:'https://pl.roborock.com/products/roborock-saros-10r-robot-sprzatajacy',z60:'https://pl.mova.tech/products/mova-z60-ultra-robot-vacuum',yuka:'https://pl.mammotion.com/products/robot-koszacy-yuka-mini-2-1000',luba:'https://pl.mammotion.com/products/robot-koszacy-luba-mini-2-awd-1000',spino:'https://pl.mammotion.com/products/robot-do-czyszczenia-basenu-spino-e1'};
 const recommendations={
   qv35a:{brand:'ROBOROCK',name:'QV35A Set',copy:'Najrozsądniejszy start: kompletna stacja, odkurzanie i mopowanie bez wejścia w cenę flagowca.'},
   saros:{brand:'ROBOROCK',name:'Saros 10R',copy:'Smukły robot premium, który dobrze radzi sobie z przeszkodami, dywanami i sierścią.'},
-  z60:{brand:'MOVA',name:'Z60 Ultra Roller',copy:'Dobry wybór do dużej powierzchni i częstego mopowania — z mocnym ssaniem i aktywnym pokonywaniem progów.'},
+  z60:{brand:'MOVA',name:'Z60 Ultra Roller Complete',copy:'Dobry wybór do dużej powierzchni i częstego mopowania — z mocnym ssaniem i aktywnym pokonywaniem progów.'},
   yuka:{brand:'MAMMOTION',name:'YUKA mini 2 1000',copy:'Prosta konfiguracja bez przewodu i precyzyjna nawigacja dla typowego ogrodu do 1000 m².'},
-  luba:{brand:'MAMMOTION',name:'LUBA mini 2 AWD',copy:'Napęd 4×4 ma sens tam, gdzie ogród ma spadki, nierówności lub trudniejsze przejazdy.'},
+  luba:{brand:'MAMMOTION',name:'LUBA mini 2 AWD 1000',copy:'Napęd 4×4 ma sens tam, gdzie ogród ma spadki, nierówności lub trudniejsze przejazdy.'},
   spino:{brand:'MAMMOTION',name:'SPINO E1',copy:'Bezprzewodowe czyszczenie dna, ścian i linii wody — bez ciągnięcia kabla przez ogród.'}
 };
 function showStep(step){current=step;steps.forEach(el=>el.classList.toggle('active',Number(el.dataset.step)===step));result.classList.remove('active');back.hidden=step===1;progress.style.width=`${step*33.333}%`;progressLabel.textContent=`Krok ${step} z 3`}
@@ -39,5 +48,5 @@ back.addEventListener('click',()=>showStep(Math.max(1,current-1)));
 
 if(!window.matchMedia('(prefers-reduced-motion: reduce)').matches){
   const heroBg=document.querySelector('.hero-bg');
-  window.addEventListener('scroll',()=>{if(scrollY<innerHeight)heroBg.style.transform=`scale(1.02) translateY(${scrollY*.08}px)`},{passive:true});
+  if(heroBg)window.addEventListener('scroll',()=>{if(scrollY<innerHeight)heroBg.style.transform=`scale(1.02) translateY(${scrollY*.08}px)`},{passive:true});
 }
