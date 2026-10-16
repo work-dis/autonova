@@ -27,7 +27,7 @@ npm run dev
 
 ## GitHub Pages
 
-Workflow `.github/workflows/pages.yml` проверяет и публикует `dist` при каждом push в `main`. В настройках репозитория Pages нужно один раз выбрать источник **GitHub Actions**.
+В настройках репозитория Pages нужно один раз выбрать источник **GitHub Actions**, затем вручную запустить workflow **Deploy to GitHub Pages**. Он проверит и опубликует содержимое `dist`. Workflow намеренно не запускается при обычном push, пока Pages не включён в настройках репозитория.
 
 ## Docker и другие платформы
 
